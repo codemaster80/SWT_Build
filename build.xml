@@ -1,0 +1,54 @@
+<project basedir="src" name="MyHelloWorldBuildFile" default="run">
+
+    <property name="srcDir" value="../src"/>
+    <property name="buildDir" value="../build"/>
+    <property name="jarDir" value="../jar"/>
+    <property name="docDir" value="../docs"/>
+
+    <!--    first clean-->
+    <target name="cleanBefore">
+       <delete>
+           <fileset dir="." includes="**/*.jar"/>
+           <fileset dir="." includes="**/*.class"/>
+       </delete>
+    </target>
+
+    <!--    compile-->
+    <target name="compile" depends="cleanBefore">
+        <mkdir dir="${buildDir}" />
+        <javac srcdir="${srcDir}" destdir="${buildDir}" debug="on" includeantruntime="on"/>
+    </target>
+
+    <!--    jar-->
+    <target name="jar" depends="compile">
+        <mkdir dir="${jarDir}" />
+        <jar destfile="${jarDir}/program.jar" includes="**/*.class" />
+    </target>
+
+    <!--    javadoc-->
+    <target name="doc" depends="jar">
+        <mkdir dir="${docDir}" />
+        <javadoc sourcepath="${srcDir}"
+                 destdir="${docDir}"
+                 packagenames="*.*"
+                 sourcefiles="${srcDir}/*.*"
+                 author="true"
+                 private="true"
+                 version="true"
+                 windowtitle="${ant.project.name}"/>
+    </target>
+
+    <!--    run-->
+    <target name="run" depends="doc">
+        <java classname="HelloWorld" classpath="../build/" fork="true"/>
+    </target>
+
+    <!--    second clean-->
+    <target name="cleanAfter" depends="run">
+        <delete>
+            <fileset dir="." includes="**/*.jar"/>
+            <fileset dir="." includes="**/*.class"/>
+        </delete>
+    </target>
+
+</project>
